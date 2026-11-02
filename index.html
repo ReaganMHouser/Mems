@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Keepsake Wall</title>
+<meta name="description" content="A shared wall of photos and memories for family and friends.">
+<meta name="theme-color" content="#fbf8f3">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="bar">
+  <a class="brand" id="brand" href="./"><img src="icon-192.png" alt=""><span id="brandName">Keepsake Wall</span></a>
+  <button type="button" class="link" id="myPagesBtn" hidden>My pages</button>
+</div></header>
+
+<main>
+<!-- ===== Organizer: sign in ===== -->
+<section id="loginV" class="narrow" hidden>
+  <h1 class="h">Organizer sign in</h1>
+  <p class="muted">Sign in to create and manage your pages. Family members don't need this — they just open the link you send them.</p>
+  <form id="loginF" class="form">
+    <label>Email<input id="em" type="email" autocomplete="username" required></label>
+    <label>Password<input id="pw" type="password" autocomplete="current-password" required></label>
+    <button class="primary big" id="lgo">Sign in</button>
+    <p class="msg" id="lmsg" role="status"></p>
+  </form>
+</section>
+
+<!-- ===== Organizer: my pages ===== -->
+<section id="pagesV" class="wide" hidden>
+  <div class="row"><h1 class="h">My pages</h1><button type="button" class="primary" id="newPage">+ New page</button></div>
+  <p class="msg" id="pagesMsg"></p>
+  <div id="pageList" class="plist"></div>
+  <p class="foot"><button type="button" class="link" id="signOut">Sign out</button></p>
+</section>
+
+<!-- ===== Wall (guests + organizer) ===== -->
+<section id="wallV" hidden>
+  <div class="hero">
+    <div class="cover" id="cover" hidden></div>
+    <p class="eyebrow" id="eyebrow"></p>
+    <h1 class="title" id="wTitle"></h1>
+    <p class="desc" id="wDesc" hidden></p>
+    <p class="count" id="wCount"></p>
+    <div class="ownbar" id="ownBar" hidden>
+      <button type="button" id="oShare">Share link &amp; QR</button>
+      <button type="button" id="oEdit">Edit page</button>
+      <label class="switch"><input type="checkbox" id="oOpen"><span></span><b id="oOpenTxt">Posting is open</b></label>
+    </div>
+    <p class="closed" id="closedNote" hidden>This page is no longer accepting new posts.</p>
+    <button type="button" class="primary big addbtn" id="addBtn" hidden>+ Share a memory</button>
+  </div>
+  <div id="grid" class="grid"></div>
+  <p class="empty" id="empty" hidden></p>
+</section>
+
+<section id="naV" class="narrow center" hidden>
+  <h1 class="h">Page not found</h1>
+  <p class="muted">This link may be incomplete or the page may have been removed. Please check the link with the person who sent it.</p>
+</section>
+<section id="setupV" class="narrow center" hidden>
+  <h1 class="h">Almost ready</h1>
+  <p class="muted">Open <b>config.js</b> and paste your Supabase URL and key, then reload.</p>
+</section>
+</main>
+
+<!-- ===== Feed ===== -->
+<div id="feedV" class="feedv" hidden>
+  <div class="fbar"><button type="button" class="icon" id="back" aria-label="Back to grid">‹</button><span class="ftitle" id="fTitle"></span></div>
+  <div id="feed" class="feed"></div>
+</div>
+
+<!-- ===== Share / edit memory ===== -->
+<dialog id="postD"><form class="form sheet" id="postF" method="dialog">
+  <h2 id="postH">Share a memory</h2>
+  <label>Your name<input id="pName" maxlength="60" autocomplete="name" required placeholder="e.g. Aunt Mary"></label>
+  <div class="lbl">Photos <span class="muted" id="pCount">(up to 10)</span></div>
+  <div class="thumbs" id="thumbs"></div>
+  <label class="btn addph" id="addPh">+ Add photos<input id="files" type="file" accept="image/*" multiple hidden></label>
+  <label><span id="pMsgLbl">Your memory</span><textarea id="pMsg" rows="6" maxlength="3000" placeholder=""></textarea></label>
+  <p class="msg" id="nmsg" role="status"></p>
+  <div class="acts"><button type="button" class="danger" id="pDel" hidden>Delete my post</button><span class="sp"></span>
+    <button type="button" id="pCancel">Cancel</button><button class="primary" id="pSave">Post</button></div>
+</form></dialog>
+
+<!-- ===== Create / edit page ===== -->
+<dialog id="pageD"><form class="form sheet" id="pageF" method="dialog">
+  <h2 id="pageH">New page</h2>
+  <div class="lbl">This page is…</div>
+  <div class="seg"><label><input type="radio" name="kind" value="memorial" checked><span>In memory of someone</span></label><label><input type="radio" name="kind" value="celebration"><span>A celebration</span></label></div>
+  <label>Name of the person or occasion<input id="gTitle" maxlength="120" required placeholder="e.g. Margaret “Peggy” Lane"></label>
+  <label>Short description or dates <span class="muted">(optional)</span><textarea id="gDesc" rows="3" maxlength="600" placeholder="e.g. 1941 – 2026 · Forever in our hearts"></textarea></label>
+  <div class="lbl">Cover photo <span class="muted">(optional)</span></div>
+  <div class="covrow"><div class="covprev" id="covPrev">No photo</div><label class="btn">Choose photo<input id="covFile" type="file" accept="image/*" hidden></label><button type="button" class="link" id="covRm" hidden>Remove</button></div>
+  <p class="msg" id="gmsg" role="status"></p>
+  <div class="acts"><button type="button" class="danger" id="gDel" hidden>Delete page</button><span class="sp"></span>
+    <button type="button" id="gCancel">Cancel</button><button class="primary" id="gSave">Create page</button></div>
+</form></dialog>
+
+<!-- ===== Share link + QR ===== -->
+<dialog id="shareD"><div class="form sheet">
+  <h2>Share this page</h2>
+  <p class="muted">Anyone with this link can view the page and add one post. Send it by text or email, or let people scan the QR code.</p>
+  <div class="linkrow"><input id="shLink" readonly><button type="button" class="primary" id="shCopy">Copy</button></div>
+  <canvas id="qr" class="qr" width="600" height="600" aria-label="QR code for the link"></canvas>
+  <div class="acts"><button type="button" id="shDl">Download QR (PNG)</button><span class="sp"></span><button type="button" id="shClose">Done</button></div>
+</div></dialog>
+
+<!-- ===== Organizer: post options ===== -->
+<dialog id="optD"><div class="form sheet">
+  <h2>Post options</h2>
+  <p class="muted" id="optTxt"></p>
+  <div class="acts"><button type="button" class="danger" id="optRm">Remove this post</button><span class="sp"></span><button type="button" id="optClose">Cancel</button></div>
+</div></dialog>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
